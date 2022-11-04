@@ -1,31 +1,18 @@
 const express = require("express");
-const { faker } = require("@faker-js/faker");
-
 const router = express.Router();
 
+const UserService = require("./../service/userService");
+const service = new UserService();
+
 router.get("/", (req, res) => {
-  const users = [];
-
-  const { size } = req.query;
-  const limit = size || 10;
-
-  for (let i = 0; i < limit; i++) {
-    users.push({
-      name: `${faker.name.firstName()} ${faker.name.lastName()}`,
-      userName: faker.internet.userName(),
-    });
-  }
-
+  const users = service.find();
   res.json(users);
 });
 
 router.get("/:userId", (req, res) => {
   const { userId } = req.params;
-  res.json({
-    userId,
-    name: "Alejandro Vásquez",
-    userName: "Alejo",
-  });
+  const users = service.findOne(userId);
+  res.json(users);
 });
 
 module.exports = router;
